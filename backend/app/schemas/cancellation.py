@@ -1,0 +1,42 @@
+from pydantic import BaseModel, Field
+
+class CancellationRequest(BaseModel):
+    hotel_type: str = Field(..., description="Hotel type ('Resort Hotel' or 'City Hotel')", examples=["City Hotel"])
+    lead_time: int = Field(..., ge=0, description="Days between booking date and arrival date", examples=[34])
+    arrival_date_year: int = Field(..., description="Year of arrival date", examples=[2026])
+    arrival_date_month: str = Field(..., description="Month of arrival date", examples=["July"])
+    arrival_date_week_number: int = Field(..., description="Week number of year for arrival date", examples=[27])
+    arrival_date_day_of_month: int = Field(..., description="Day of arrival date", examples=[1])
+    stays_in_weekend_nights: int = Field(..., ge=0, description="Number of weekend nights stay", examples=[2])
+    stays_in_week_nights: int = Field(..., ge=0, description="Number of week nights stay", examples=[5])
+    adults: int = Field(..., ge=0, description="Number of adults", examples=[2])
+    children: int = Field(0, ge=0, description="Number of children", examples=[0])
+    babies: int = Field(0, ge=0, description="Number of babies", examples=[0])
+    meal: str = Field("BB", description="Type of meal booked", examples=["BB"])
+    country: str = Field("PRT", description="Country of origin", examples=["PRT"])
+    market_segment: str = Field(..., description="Market segment designation", examples=["Online TA"])
+    distribution_channel: str = Field(..., description="Booking distribution channel", examples=["TA/TO"])
+    is_repeated_guest: int = Field(0, ge=0, le=1, description="Repeated guest indicator (0 or 1)", examples=[0])
+    previous_cancellations: int = Field(0, ge=0, description="Number of previous cancellations", examples=[0])
+    previous_bookings_not_canceled: int = Field(0, ge=0, description="Number of previous completed bookings", examples=[0])
+    reserved_room_type: str = Field(..., description="Code of room type reserved", examples=["A"])
+    assigned_room_type: str = Field(..., description="Code of room type assigned", examples=["A"])
+    booking_changes: int = Field(0, ge=0, description="Number of booking modifications", examples=[0])
+    deposit_type: str = Field("No Deposit", description="Deposit status", examples=["No Deposit"])
+    agent: str = Field("NULL", description="ID of travel agency", examples=["9"])
+    company: str = Field("NULL", description="ID of company that made booking", examples=["NULL"])
+    days_in_waiting_list: int = Field(0, ge=0, description="Number of days in waiting list", examples=[0])
+    customer_type: str = Field("Transient", description="Type of booking customer", examples=["Transient"])
+    adr: float = Field(..., ge=0.0, description="Average Daily Rate", examples=[98.0])
+    required_car_parking_spaces: int = Field(0, ge=0, description="Number of car parking spaces required", examples=[0])
+    total_of_special_requests: int = Field(0, ge=0, description="Number of special requests made", examples=[1])
+
+class RiskFactor(BaseModel):
+    feature: str = Field(..., description="Feature that contributed to the prediction", examples=["lead_time"])
+    impact: str = Field(..., description="Impact of feature: 'positive' (increases risk) or 'negative' (decreases risk)", examples=["positive"])
+    score: float = Field(..., description="Relative importance or SHAP/feature attribution score", examples=[0.45])
+
+class CancellationResponse(BaseModel):
+    is_canceled_probability: float = Field(..., description="Probability of booking cancellation (0 to 1)", examples=[0.24])
+    cancellation_risk_level: str = Field(..., description="Categorized risk level ('Low', 'Medium', 'High')", examples=["Low"])
+    key_risk_factors: list[RiskFactor] = Field(..., description="Attribution of input features to cancellation risk")

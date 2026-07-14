@@ -1,0 +1,20 @@
+# Core FastAPI Backend Dependencies (Suitable for both Vercel Serverless & Standalone)
+fastapi>=0.110.0
+uvicorn>=0.29.0
+pydantic>=2.6.0
+mangum>=0.17.0
+pandas>=2.2.0
+numpy>=1.26.0
+scikit-learn>=1.4.0
+python-multipart>=0.0.9
+python-dotenv>=1.0.0
+
+# Heavy dependencies needed only for Standalone deployment (Render/Railway)
+# and model training notebooks. These are excluded or commented out here
+# to keep the Vercel serverless package size under the 250MB uncompressed limit.
+#
+# To run local sentiment analysis or run training, install these additional packages:
+# torch>=2.2.0
+# transformers>=4.38.0
+# xgboost>=2.0.0
+# lightgbm>=4.3.0
